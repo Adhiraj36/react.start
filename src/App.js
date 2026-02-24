@@ -1,6 +1,31 @@
 import './App.css';
+import {useState, useEffect} from 'react';
+import axios from 'axios'
+
+const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m";
 
 function App() {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(()=>{
+    g = async() => {
+      const resp = await axios.get(API_URL)
+      if (resp.status === 200) {
+        setData(resp.data);
+      } else {
+        setError("API call failed");
+      }
+    }
+  },[]) // Inputs anoynomous function and a array of states, triggers on every state change
+
+  if (error !== "") {
+    return (
+      <p>{error}</p>
+    )
+  }
+
+
   return (
     <>
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -25,6 +50,10 @@ function App() {
     </div>
   </div>
 </nav>
+
+<p>
+  Elevation: {data?.elevation}
+</p>
     </>
   );
 }
