@@ -1,22 +1,25 @@
 import './App.css';
 import {useState, useEffect} from 'react';
-import axios from 'axios'
+import axios from 'axios';
+import { LineChart } from '@mui/x-charts/LineChart';
 
-const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m";
+const API_URL = "https://ap.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m";
 
 function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(()=>{
-    g = async() => {
+    const g = async() => {
       const resp = await axios.get(API_URL)
+      console.log(resp);
       if (resp.status === 200) {
         setData(resp.data);
       } else {
         setError("API call failed");
       }
     }
+    g();
   },[]) // Inputs anoynomous function and a array of states, triggers on every state change
 
   if (error !== "") {
@@ -50,10 +53,20 @@ function App() {
     </div>
   </div>
 </nav>
+import { LineChart } from '@mui/x-charts/LineChart';
 
-<p>
-  Elevation: {data?.elevation}
-</p>
+export default function BasicLineChart() {
+    <LineChart
+      xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+      series={[
+        {
+          data: [2, 5.5, 2, 8.5, 1.5, 5],
+        },
+      ]}
+      height={300}
+    />
+}
+
     </>
   );
 }
