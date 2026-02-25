@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { LineChart } from '@mui/x-charts/LineChart';
 
-const API_URL = "https://ap.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m";
+const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m";
 
 function App() {
   const [data, setData] = useState(null);
@@ -33,7 +33,7 @@ function App() {
     <>
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
   <div className="container-fluid">
-    <a className="navbar-brand" href="/">Text Changer</a>
+    <a className="navbar-brand" href="/">Weather Charts</a>
     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span className="navbar-toggler-icon"></span>
     </button>
@@ -53,20 +53,83 @@ function App() {
     </div>
   </div>
 </nav>
-import { LineChart } from '@mui/x-charts/LineChart';
 
-export default function BasicLineChart() {
-    <LineChart
-      xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-      series={[
-        {
-          data: [2, 5.5, 2, 8.5, 1.5, 5],
-        },
-      ]}
-      height={300}
-    />
-}
 
+    <div className="charts-container">
+      <div className="charts-grid">
+        {data && (() => {
+          const times = data.hourly.time.map((t) => new Date(t));
+          const temps = data.hourly.temperature_2m;
+          const series = [
+            {
+              id: 'temperature_2m',
+              data: temps,
+            },
+          ];
+
+          return (
+            <div className="chart-card">
+              <div className="chart-title">Temperature (2m)</div>
+              <div className="chart-body">
+                <LineChart
+                  series={series}
+                  xAxis={[{ scaleType: 'time', data: times }]}
+                  height={280}
+                />
+              </div>
+            </div>
+          );
+        })()}
+
+        {data && (() => {
+          const times = data.hourly.time.map((t) => new Date(t));
+          const hum = data.hourly.relative_humidity_2m;
+          const series = [
+            {
+              id: 'relative_humidity_2m',
+              data: hum,
+            },
+          ];
+
+          return (
+            <div className="chart-card">
+              <div className="chart-title">Relative Humidity (%)</div>
+              <div className="chart-body">
+                <LineChart
+                  series={series}
+                  xAxis={[{ scaleType: 'time', data: times }]}
+                  height={280}
+                />
+              </div>
+            </div>
+          );
+        })()}
+
+        {data && (() => {
+          const times = data.hourly.time.map((t) => new Date(t));
+          const wind_speed = data.hourly.wind_speed_10m;
+          const series = [
+            {
+              id: 'wind_speed_10m',
+              data: wind_speed,
+            },
+          ];
+
+          return (
+            <div className="chart-card">
+              <div className="chart-title">Wind Speed (10m)</div>
+              <div className="chart-body">
+                <LineChart
+                  series={series}
+                  xAxis={[{ scaleType: 'time', data: times }]}
+                  height={280}
+                />
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+    </div>
     </>
   );
 }
